@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Client</title>
+</head>
+<body>
+    <input type="text" id="msgInput" placeholder="Type message..." />
+    <button id="sendBtn" disabled>Send</button>
+    <pre id="logged"></pre>
+
+    <script>
+        function log(s){
+          logged.textContent += s + "\n";
+        }
+        // const ws = new WebSocket("ws://localhost:/ws"); 
+        const ws = new WebSocket("wss://localhost:7024/ws"); // Use wss:// (secure connection)
+
+        ws.onopen = () => {
+          log("✅ Connected to server")
+          sendBtn.disabled = false;
+        }
+
+        ws.onmessage = (event) => { // Receive from server WebSocket.SendAsync
+          log("📩 Received: " + event.data)
+        };
+
+        ws.onclose = () => {
+          log("❌ Connection closed")
+          // SendBtn.disabled = true;
+        }
+
+        sendBtn.onclick= ()=> {
+          const msg = msgInput.value;
+          ws.send(msg);
+          log("📤 Sent: " + msg );
+          input.value = "";
+        }
+    </script>
+</body>
+</html>
